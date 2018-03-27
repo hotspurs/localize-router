@@ -51,8 +51,13 @@ export class LocalizeRouterService {
       this.parser.translateRoutes(lang).subscribe(() => {
         let url = this.traverseRouteSnapshot(rootSnapshot);
 
+
+
         if (!this.settings.alwaysSetPrefix) {
           let urlSegments = url.split('/');
+
+
+
           const languageSegmentIndex = urlSegments.indexOf(this.parser.currentLang);
           //If the default language has no prefix make sure to remove and add it when necessary
           if (this.parser.currentLang === this.parser.defaultLang) {
@@ -72,6 +77,8 @@ export class LocalizeRouterService {
           url = urlSegments.join('/');
         }
 
+        url = url.slice(0, url.length - 1);
+
         if (useNavigateMethod) {
           this.router.navigate([url], extras);
         } else {
@@ -87,7 +94,7 @@ export class LocalizeRouterService {
    * @returns {string}
    */
   private traverseRouteSnapshot(snapshot: ActivatedRouteSnapshot): string {
-    if (snapshot.firstChild && snapshot.firstChild.routeConfig && snapshot.firstChild.routeConfig.path) {
+    if (snapshot.firstChild && snapshot.firstChild.routeConfig && snapshot.firstChild.routeConfig.path !== undefined) {
       if (snapshot.firstChild.routeConfig.path !== '**') {
         return this.parseSegmentValue(snapshot) + '/' + this.traverseRouteSnapshot(snapshot.firstChild);
       } else {
