@@ -77,7 +77,7 @@ export class LocalizeRouterService {
           url = urlSegments.join('/');
         }
 
-        url = url.slice(0, url.length - 1);
+        url = url.replace(/\/$/, '');
 
         if (useNavigateMethod) {
           this.router.navigate([url], extras);
