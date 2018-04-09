@@ -51,12 +51,8 @@ export class LocalizeRouterService {
       this.parser.translateRoutes(lang).subscribe(() => {
         let url = this.traverseRouteSnapshot(rootSnapshot);
 
-
-
         if (!this.settings.alwaysSetPrefix) {
           let urlSegments = url.split('/');
-
-
 
           const languageSegmentIndex = urlSegments.indexOf(this.parser.currentLang);
           //If the default language has no prefix make sure to remove and add it when necessary
@@ -77,8 +73,6 @@ export class LocalizeRouterService {
           url = urlSegments.join('/');
         }
 
-        url = url.replace(/\/$/, '');
-
         if (useNavigateMethod) {
           this.router.navigate([url], extras);
         } else {
@@ -94,14 +88,17 @@ export class LocalizeRouterService {
    * @returns {string}
    */
   private traverseRouteSnapshot(snapshot: ActivatedRouteSnapshot): string {
-    if (snapshot.firstChild && snapshot.firstChild.routeConfig && snapshot.firstChild.routeConfig.path !== undefined) {
+    let route = this.parseSegmentValue(snapshot);
+
+    if (snapshot.firstChild && snapshot.firstChild.routeConfig && snapshot.firstChild.routeConfig.path) {
       if (snapshot.firstChild.routeConfig.path !== '**') {
-        return this.parseSegmentValue(snapshot) + '/' + this.traverseRouteSnapshot(snapshot.firstChild);
+        route += '/' + this.traverseRouteSnapshot(snapshot.firstChild);
       } else {
-        return this.parseSegmentValue(snapshot.firstChild);
+        route += '/' + this.parseSegmentValue(snapshot.firstChild);
       }
     }
-    return this.parseSegmentValue(snapshot);
+
+    return route;
   }
 
   /**
@@ -112,6 +109,7 @@ export class LocalizeRouterService {
   private parseSegmentValue(snapshot: ActivatedRouteSnapshot): string {
     if (snapshot.routeConfig) {
       if (snapshot.routeConfig.path === '**') {
+        debugger;
         return snapshot.url.filter((segment: UrlSegment) => segment.path).map((segment: UrlSegment) => segment.path).join('/');
       } else {
         let subPathSegments = snapshot.routeConfig.path.split('/');
