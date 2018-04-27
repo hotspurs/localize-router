@@ -109,7 +109,6 @@ export class LocalizeRouterService {
   private parseSegmentValue(snapshot: ActivatedRouteSnapshot): string {
     if (snapshot.routeConfig) {
       if (snapshot.routeConfig.path === '**') {
-        debugger;
         return snapshot.url.filter((segment: UrlSegment) => segment.path).map((segment: UrlSegment) => segment.path).join('/');
       } else {
         let subPathSegments = snapshot.routeConfig.path.split('/');
