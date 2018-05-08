@@ -124,7 +124,7 @@ export abstract class LocalizeParser {
    * @returns {Promise<any>}
    */
   translateRoutes(language: string): Observable<any> {
-    return new Observable<any>((observer: Observer<any>) => {
+    return new Observable<Routes>((observer: Observer<any>) => {
       this._cachedLang = language;
       if (this._languageRoute) {
         this._languageRoute.path = language;
@@ -146,7 +146,7 @@ export abstract class LocalizeParser {
           this._translateRouteTree(this.routes);
         }
 
-        observer.next(void 0);
+        observer.next(this.routes);
         observer.complete();
       });
     });

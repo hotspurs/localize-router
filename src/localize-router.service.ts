@@ -46,10 +46,25 @@ export class LocalizeRouterService {
    */
   changeLanguage(lang: string, extras?: NavigationExtras, useNavigateMethod?: boolean): void {
     if (lang !== this.parser.currentLang) {
-      let rootSnapshot: ActivatedRouteSnapshot = this.router.routerState.snapshot.root;
 
-      this.parser.translateRoutes(lang).subscribe(() => {
+      this.parser.translateRoutes(lang).subscribe((routes) => {
+        this.router.resetConfig(routes);
+        let rootSnapshot: ActivatedRouteSnapshot = this.router.routerState.snapshot.root;
+
         let url = this.traverseRouteSnapshot(rootSnapshot);
+        lang = url.slice(0, 3);
+
+        switch(lang) {
+          case '/en': url = url.replace(/^\/en/, '');
+          case '/zh': url = url.replace(/^\/zh/, '');
+          case '/ru': url = url.replace(/^\/ru/, '');
+        }
+
+        debugger;
+        url = `${this.parser.currentLang === this.parser.defaultLang ? '' : this.parser.currentLang }${url}`;
+
+        debugger;
+
 
         if (!this.settings.alwaysSetPrefix) {
           let urlSegments = url.split('/');
