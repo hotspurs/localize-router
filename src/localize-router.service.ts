@@ -60,11 +60,7 @@ export class LocalizeRouterService {
           case '/ru': url = url.replace(/^\/ru/, '');
         }
 
-        debugger;
         url = `${this.parser.currentLang === this.parser.defaultLang ? '' : this.parser.currentLang }${url}`;
-
-        debugger;
-
 
         if (!this.settings.alwaysSetPrefix) {
           let urlSegments = url.split('/');
