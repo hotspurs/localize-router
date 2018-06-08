@@ -1,13 +1,13 @@
 import { Inject } from '@angular/core';
-import { Router, NavigationStart, ActivatedRouteSnapshot, NavigationExtras, UrlSegment } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import { ActivatedRouteSnapshot, NavigationExtras, NavigationStart, Router, UrlSegment } from '@angular/router';
 import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/pairwise';
-
-import { LocalizeParser } from './localize-router.parser';
+import 'rxjs/add/operator/toPromise';
+import { Subject } from 'rxjs/Subject';
 import { LocalizeRouterSettings } from './localize-router.config';
+import { LocalizeParser } from './localize-router.parser';
+
 
 /**
  * Localization service
@@ -47,6 +47,7 @@ export class LocalizeRouterService {
   changeLanguage(lang: string, extras?: NavigationExtras, useNavigateMethod?: boolean): void {
     if (lang !== this.parser.currentLang) {
 
+
       this.parser.translateRoutes(lang).subscribe((routes) => {
         this.router.resetConfig(routes);
         let rootSnapshot: ActivatedRouteSnapshot = this.router.routerState.snapshot.root;
@@ -60,9 +61,10 @@ export class LocalizeRouterService {
           case '/ru': url = url.replace(/^\/ru/, '');
         }
 
-        url = `${this.parser.currentLang === this.parser.defaultLang ? '' : this.parser.currentLang }${url}`;
+        url = `${this.parser.currentLang === this.parser.defaultLang && !this.settings.alwaysSetPrefix ? '' : this.parser.currentLang }${url}`;
 
         if (!this.settings.alwaysSetPrefix) {
+
           let urlSegments = url.split('/');
 
           const languageSegmentIndex = urlSegments.indexOf(this.parser.currentLang);
